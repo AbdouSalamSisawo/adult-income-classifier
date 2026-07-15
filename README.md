@@ -49,26 +49,30 @@ This project demonstrates a complete machine learning pipeline from data explora
 
 ## Project Structure
 
+```
 Adult_income/
-│
-├── backend/
-│   ├── main.py
-│   ├── requirements.txt
-│   └── adult_income_model.pkl
-│
-├── frontend/
-│   └── index.html
-│
-├── machine learning phase/
-│   ├── Data/
-│   ├── Documents/
-│   ├── ML_model_notebook.ipynb
-│   └── Readme.md
-│
-├── README.md
-├── test_request.json
-├── .gitignore
-└── requirements.txt
+├── backend/                          # FastAPI prediction API
+│   ├── main.py                       # FastAPI application & prediction endpoints
+│   ├── requirements.txt              # Backend Python dependencies
+│   ├── adult_income_model.pkl        # Trained model artifact (Decision Tree + Preprocessor)
+│   └── __pycache__/                  # Python cache (auto-generated)
+├── frontend/                         # Static HTML/JS UI
+│   └── index.html                    # Single-page application with form and results
+├── machine learning phase/           # Original ML research and development
+│   ├── ML_model_notebook.ipynb       # Full ML pipeline (EDA, training, evaluation)
+│   ├── adult_income_model.pkl        # Original model artifact (backup)
+│   ├── Data/                         # UCI Adult dataset files
+│   │   ├── adult.data                # Training dataset
+│   │   ├── adult.test                # Test dataset
+│   │   └── ...
+│   ├── Documents/                    # Research notes and documentation
+│   └── Readme.md                     # ML phase documentation
+├── .venv/                            # Python virtual environment (auto-created)
+├── image.png                         # Screenshot of the prediction interface
+├── README.md                         # This file (project documentation)
+├── test_request.json                 # Sample API request for testing
+└── requirements.txt                  # Root-level dependencies (if applicable)
+```
 
 ## Installation
 
