@@ -54,10 +54,11 @@ Adult_income/
 ├── backend/                          # FastAPI prediction API
 │   ├── main.py                       # FastAPI application & prediction endpoints
 │   ├── requirements.txt              # Backend Python dependencies
-│   ├── adult_income_model.pkl        # Trained model artifact (Decision Tree + Preprocessor)
-│   └── __pycache__/                  # Python cache (auto-generated)
+│   └── adult_income_model.pkl        # Trained model artifact (Decision Tree + Preprocessor)
+│   
 ├── frontend/                         # Static HTML/JS UI
 │   └── index.html                    # Single-page application with form and results
+│
 ├── machine learning phase/           # Original ML research and development
 │   ├── ML_model_notebook.ipynb       # Full ML pipeline (EDA, training, evaluation)
 │   ├── adult_income_model.pkl        # Original model artifact (backup)
@@ -67,11 +68,11 @@ Adult_income/
 │   │   └── ...
 │   ├── Documents/                    # Research notes and documentation
 │   └── Readme.md                     # ML phase documentation
-├── .venv/                            # Python virtual environment (auto-created)
+│
 ├── image.png                         # Screenshot of the prediction interface
 ├── README.md                         # This file (project documentation)
 ├── test_request.json                 # Sample API request for testing
-└── requirements.txt                  # Root-level dependencies (if applicable)
+└── requirements.txt                  # Root-level dependencies
 ```
 
 ## Installation
