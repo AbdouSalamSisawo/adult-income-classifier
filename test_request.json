@@ -1,0 +1,12 @@
+{
+  "age": 35,
+  "workclass": "Private",
+  "education": "Bachelors",
+  "maritalStatus": "Married-civ-spouse",
+  "occupation": "Exec-managerial",
+  "relationship": "Husband",
+  "sex": "Male",
+  "capitalGain": 0,
+  "capitalLoss": 0,
+  "hoursPerWeek": 40
+}

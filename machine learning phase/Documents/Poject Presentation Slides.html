@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Adult Income Classification – Data Mining Presentation</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: Arial, sans-serif;
+    background: #e8e8e8;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 30px 20px;
+    gap: 30px;
+  }
+
+  .nav {
+    position: fixed;
+    top: 16px;
+    right: 20px;
+    display: flex;
+    gap: 8px;
+    z-index: 100;
+  }
+  .nav button {
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 6px 14px;
+    font-size: 13px;
+    cursor: pointer;
+    font-family: Arial, sans-serif;
+  }
+  .nav button:hover { background: #f0f0f0; }
+
+  .slide-label {
+    font-size: 12px;
+    color: #666;
+    font-family: Arial, sans-serif;
+    align-self: flex-start;
+    margin-left: calc(50% - 480px);
+  }
+
+  /* SLIDE WRAPPER — matches 4:3 PowerPoint at ~960×720 */
+  .slide {
+    width: 960px;
+    min-height: 540px;
+    background: #ffffff;
+    border: 1px solid #ccc;
+    position: relative;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  }
+
+  /* ── SLIDE 1 – Title slide ── */
+  .s1-inner {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 80px;
+    text-align: center;
+  }
+  .s1-box {
+    border: 1.5px solid #000;
+    padding: 50px 60px;
+    width: 100%;
+    max-width: 700px;
+  }
+  .s1-box h1 {
+    font-size: 28px;
+    font-weight: 700;
+    color: #000;
+    line-height: 1.3;
+    margin-bottom: 28px;
+  }
+  .s1-box .subtitle {
+    font-size: 13px;
+    color: #333;
+    line-height: 1.9;
+  }
+  .s1-box .subtitle span { display: block; }
+
+  /* ── CONTENT SLIDES 2–6 ── */
+  .slide-header {
+    padding: 22px 40px 16px;
+    border-bottom: 1.5px solid #000;
+  }
+  .slide-header h2 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #000;
+  }
+  .slide-body {
+    flex: 1;
+    padding: 24px 40px 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  /* Bullet points */
+  .bullet-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+  }
+  .bullet-list li {
+    font-size: 13.5px;
+    color: #222;
+    padding-left: 18px;
+    position: relative;
+    line-height: 1.55;
+  }
+  .bullet-list li::before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    color: #000;
+    font-size: 13px;
+  }
+  .bullet-list li strong {
+    font-weight: 700;
+  }
+
+  /* Two-column layout */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    flex: 1;
+  }
+  .two-col-left, .two-col-right {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .col-heading {
+    font-size: 13.5px;
+    font-weight: 700;
+    color: #000;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 5px;
+    margin-bottom: 2px;
+  }
+
+  /* Data table */
+  table.info-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12.5px;
+  }
+  table.info-table th {
+    background: #000;
+    color: #fff;
+    padding: 6px 10px;
+    text-align: left;
+    font-weight: 700;
+    font-size: 12px;
+  }
+  table.info-table td {
+    padding: 5px 10px;
+    color: #222;
+    border-bottom: 1px solid #ddd;
+  }
+  table.info-table tr:nth-child(even) td { background: #f7f7f7; }
+
+  /* Metric boxes */
+  .metric-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-top: 4px;
+  }
+  .metric-box {
+    border: 1.5px solid #000;
+    padding: 14px 12px;
+    text-align: center;
+  }
+  .metric-box .m-label {
+    font-size: 11px;
+    color: #555;
+    margin-bottom: 6px;
+    font-weight: 400;
+  }
+  .metric-box .m-value {
+    font-size: 22px;
+    font-weight: 700;
+    color: #000;
+    line-height: 1;
+  }
+  .metric-box .m-sub {
+    font-size: 11px;
+    color: #555;
+    margin-top: 4px;
+  }
+
+  /* Section label */
+  .sec-label {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: #000;
+    margin-top: 12px;
+    margin-bottom: 3px;
+    border-left: 3px solid #000;
+    padding-left: 8px;
+  }
+
+  /* Comparison table */
+  table.comp-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+  }
+  table.comp-table th {
+    background: #000;
+    color: #fff;
+    padding: 7px 10px;
+    text-align: center;
+    font-size: 12px;
+  }
+  table.comp-table th:first-child { text-align: left; }
+  table.comp-table td {
+    padding: 6px 10px;
+    border-bottom: 1px solid #ddd;
+    text-align: center;
+    color: #222;
+    font-size: 12px;
+  }
+  table.comp-table td:first-child { text-align: left; font-weight: 400; }
+  table.comp-table tr:nth-child(even) td { background: #f7f7f7; }
+  table.comp-table .winner { font-weight: 700; }
+  table.comp-table .best { color: #000; font-weight: 700; }
+
+  /* Page number */
+  .pg-num {
+    position: absolute;
+    bottom: 8px;
+    right: 14px;
+    font-size: 10px;
+    color: #aaa;
+  }
+
+  /* Highlight box */
+  .highlight-box {
+    border: 1.5px solid #000;
+    padding: 12px 16px;
+    margin-top: 8px;
+  }
+  .highlight-box p {
+    font-size: 13px;
+    color: #222;
+    line-height: 1.55;
+  }
+  .highlight-box p strong { font-weight: 700; }
+
+  /* Tag chips */
+  .chip-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 6px;
+  }
+  .chip {
+    border: 1px solid #000;
+    padding: 4px 12px;
+    font-size: 12px;
+    color: #000;
+    background: #fff;
+  }
+
+  /* Print / slideshow */
+  @media print {
+    body { background: white; padding: 0; gap: 0; }
+    .nav, .slide-label { display: none; }
+    .slide { box-shadow: none; border: none; page-break-after: always; width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════ SLIDE 1 ═══════════════════════════════════ -->
+<div class="slide-label">Slide 1 of 6</div>
+<div class="slide">
+  <div class="s1-inner">
+    <div class="s1-box">
+      <h1>Adult Income Classification<br>Using Machine Learning</h1>
+      <div class="subtitle">
+        <span>CCS23213 — Data Mining &nbsp;|&nbsp; Semester 2, 2025/2026</span>
+        <span style="margin-top:4px;">Dr. Mohamad Farhan Mohamad Mohsin</span>
+        <span style="margin-top:14px; font-weight:700;">Group 2</span>
+        <span>Zikrullah Faizan &nbsp;|&nbsp; AIU2310208</span>
+        <span>Muhammed Anas Sani Lawal &nbsp;|&nbsp; AIU23102076</span>
+        <span>Abdou Salam Sisawo &nbsp;|&nbsp; AIU24102271</span>
+      </div>
+    </div>
+  </div>
+  <span class="pg-num">1</span>
+</div>
+
+<!-- ═══════════════════════════════════ SLIDE 2 ═══════════════════════════════════ -->
+<div class="slide-label">Slide 2 of 6</div>
+<div class="slide">
+  <div class="slide-header">
+    <h2>Problem, Dataset &amp; Objective</h2>
+  </div>
+  <div class="slide-body">
+
+    <div class="two-col">
+      <div class="two-col-left">
+        <div class="col-heading">Dataset Overview</div>
+        <ul class="bullet-list">
+          <li><strong>Name:</strong> Adult (Census Income) Dataset</li>
+          <li><strong>Source:</strong> UCI Machine Learning Repository</li>
+          <li><strong>Origin:</strong> 1994 United States Census Database</li>
+          <li><strong>Records:</strong> 48,842 instances</li>
+          <li><strong>Attributes:</strong> 14 predictor features + 1 target</li>
+          <li><strong>Target variable:</strong> Income (≤50K or &gt;50K)</li>
+          <li><strong>Missing values:</strong> workclass, occupation, native-country</li>
+          <li><strong>Feature types:</strong> 5 numerical, 9 categorical</li>
+        </ul>
+
+        <div class="col-heading" style="margin-top:16px;">Problem Statement</div>
+        <ul class="bullet-list">
+          <li>Predict whether an individual's annual income exceeds <strong>USD 50,000</strong></li>
+          <li>Binary <strong>classification</strong> task — two predefined income categories</li>
+          <li>Informed by demographic and occupational census attributes</li>
+          <li>Supports socioeconomic policy, credit risk, and financial planning decisions</li>
+        </ul>
+      </div>
+
+      <div class="two-col-right">
+        <div class="col-heading">Objective of the Analysis</div>
+        <ul class="bullet-list">
+          <li>Develop and evaluate ML classification models on the dataset</li>
+          <li>Identify attributes that contribute most strongly to income prediction</li>
+          <li>Apply a complete data mining workflow end-to-end</li>
+        </ul>
+
+        <div class="col-heading" style="margin-top:14px;">Algorithm Selection</div>
+        <ul class="bullet-list">
+          <li><strong>Decision Tree (CART)</strong> — non-parametric, no distributional assumptions, handles mixed feature types and non-linear interactions</li>
+          <li><strong>Gaussian Naive Bayes</strong> — probabilistic, lightweight baseline; assumes conditional feature independence</li>
+          <li>Pairing reveals impact of correlated features on a model that assumes independence vs. one that does not</li>
+          <li>Five train-test splits tested: <strong>50:50, 60:40, 70:30, 80:20, 90:10</strong></li>
+        </ul>
+
+        <div class="highlight-box" style="margin-top:10px;">
+          <p><strong>Key insight:</strong> Correlated features (relationship &amp; marital-status) are expected to limit Naive Bayes precision, while Decision Tree naturally handles feature interactions.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <span class="pg-num">2</span>
+</div>
+
+<!-- ═══════════════════════════════════ SLIDE 3 ═══════════════════════════════════ -->
+<div class="slide-label">Slide 3 of 6</div>
+<div class="slide">
+  <div class="slide-header">
+    <h2>Data Preprocessing &amp; EDA</h2>
+  </div>
+  <div class="slide-body">
+
+    <div class="two-col">
+      <div class="two-col-left">
+        <div class="col-heading">Preprocessing Steps</div>
+        <ul class="bullet-list">
+          <li><strong>Missing value handling:</strong> Mode imputation applied to workclass (5.73%), occupation (5.75%), native-country (1.75%) — all three categorical columns</li>
+          <li><strong>Outlier detection:</strong> IQR method on 5 continuous features; capital-gain (8.3%) and capital-loss (4.7%) flagged</li>
+          <li><strong>Outlier handling:</strong> Winsorisation at 99th percentile — reduced capital-gain max from 99,999 → 15,024</li>
+          <li><strong>Encoding:</strong> Label encoding for sex and income; one-hot encoding for 6 categorical columns; feature space expanded to 100+ columns</li>
+          <li><strong>Feature selection:</strong> Mutual Information scoring — 41 most informative features retained; native-country and race dummies excluded</li>
+          <li><strong>Normalisation:</strong> MinMaxScaler on 5 continuous features only; fitted on training partition per split to prevent data leakage</li>
+          <li><strong>Duplicates:</strong> 52 exact duplicate rows removed; final dataset: 48,789 records</li>
+        </ul>
+      </div>
+
+      <div class="two-col-right">
+        <div class="col-heading">Key EDA Findings</div>
+        <ul class="bullet-list">
+          <li><strong>Class imbalance:</strong> ≤50K = 76.1%, &gt;50K = 23.9% — addressed via class_weight="balanced" in Decision Tree</li>
+          <li><strong>Top MI features:</strong> relationship (0.116), marital-status (0.108), age (0.068), education-num (0.065), occupation (0.052)</li>
+          <li><strong>Correlation with income:</strong> education-num (0.33), age (0.23), hours-per-week (0.23), capital-gain (0.22)</li>
+          <li><strong>Skewness:</strong> capital-gain = 11.89, capital-loss = 4.57 — extreme right skew; post-winsorisation capital-gain = 4.61</li>
+          <li><strong>High earners profile:</strong> age 35–60, hours-per-week 40–60, Married-civ-spouse, Exec-managerial or Prof-specialty</li>
+          <li><strong>Gender gap:</strong> Males show notably higher proportion of &gt;50K earners than females</li>
+        </ul>
+
+        <div class="col-heading" style="margin-top:14px;">Sample Clean Data (Descriptive Stats)</div>
+        <table class="info-table">
+          <thead><tr><th>Feature</th><th>Mean</th><th>Median</th><th>Skewness</th></tr></thead>
+          <tbody>
+            <tr><td>age</td><td>38.64</td><td>37</td><td>0.56</td></tr>
+            <tr><td>education-num</td><td>10.08</td><td>10</td><td>–0.31</td></tr>
+            <tr><td>capital-gain</td><td>1,079</td><td>0</td><td>11.89</td></tr>
+            <tr><td>hours-per-week</td><td>40.42</td><td>40</td><td>0.23</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+  <span class="pg-num">3</span>
+</div>
+
+<!-- ═══════════════════════════════════ SLIDE 4 ═══════════════════════════════════ -->
+<div class="slide-label">Slide 4 of 6</div>
+<div class="slide">
+  <div class="slide-header">
+    <h2>Experiment Setup &amp; Model Comparison</h2>
+  </div>
+  <div class="slide-body">
+
+    <div class="two-col" style="gap:20px;">
+      <div class="two-col-left">
+        <div class="col-heading">Two Selected Algorithms</div>
+        <ul class="bullet-list">
+          <li><strong>Decision Tree (CART)</strong> — max depth = 8, class_weight = balanced, random state = 42</li>
+          <li><strong>Gaussian Naive Bayes</strong> — var_smoothing = 1e-8; minimal tuning required</li>
+        </ul>
+
+        <div class="col-heading" style="margin-top:14px;">Reason for Algorithm Choice</div>
+        <ul class="bullet-list">
+          <li>Decision Tree: handles both categorical and numerical features; interpretable; captures non-linear interactions</li>
+          <li>Naive Bayes: probabilistic, computationally cheap, fast baseline across all five splits</li>
+          <li>Comparison isolates the impact of the violated independence assumption on precision vs. recall</li>
+        </ul>
+
+        <div class="col-heading" style="margin-top:14px;">Train-Test Split Settings</div>
+        <div class="chip-row">
+          <span class="chip">50:50</span>
+          <span class="chip">60:40</span>
+          <span class="chip">70:30</span>
+          <span class="chip">80:20</span>
+          <span class="chip" style="background:#000;color:#fff;">90:10 ★ Best</span>
+        </div>
+        <ul class="bullet-list" style="margin-top:8px;">
+          <li>Stratified sampling preserves 76:24 class ratio in every split</li>
+          <li>Scaler fitted on training partition only — prevents data leakage</li>
+          <li>Fixed random state = 42 for full reproducibility</li>
+        </ul>
+      </div>
+
+      <div class="two-col-right">
+        <div class="col-heading">Comparison Table (All Splits)</div>
+        <table class="comp-table">
+          <thead>
+            <tr>
+              <th>Split</th>
+              <th>DT Acc.</th>
+              <th>DT F1</th>
+              <th>NB Acc.</th>
+              <th>NB F1</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>50:50</td><td>0.8128</td><td>0.6794</td><td>0.6370</td><td>0.6026</td></tr>
+            <tr><td>60:40</td><td>0.8073</td><td>0.6761</td><td>0.6404</td><td>0.6030</td></tr>
+            <tr><td>70:30</td><td>0.8037</td><td>0.6754</td><td>0.6446</td><td>0.6000</td></tr>
+            <tr><td>80:20</td><td>0.8061</td><td>0.6741</td><td>0.6456</td><td>0.6018</td></tr>
+            <tr style="background:#f0f0f0;"><td><strong>90:10</strong></td><td class="best">0.8149</td><td class="best">0.6855</td><td>0.7206</td><td class="best">0.6080</td></tr>
+          </tbody>
+        </table>
+
+        <div class="col-heading" style="margin-top:14px;">Key Metric Observations</div>
+        <ul class="bullet-list">
+          <li>Decision Tree: higher <strong>Accuracy, Precision, F1</strong> at every split</li>
+          <li>Naive Bayes: consistently higher <strong>Recall</strong> (0.91–0.94) — over-predicts minority class due to independence violation</li>
+          <li>Decision Tree performance improves with more training data; NB plateaus around F1 ≈ 0.60</li>
+          <li>Decision Tree AUC = <strong>0.6779</strong> vs Naive Bayes AUC = <strong>0.6346</strong></li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+  <span class="pg-num">4</span>
+</div>
+
+<!-- ═══════════════════════════════════ SLIDE 5 ═══════════════════════════════════ -->
+<div class="slide-label">Slide 5 of 6</div>
+<div class="slide">
+  <div class="slide-header">
+    <h2>Best Model</h2>
+  </div>
+  <div class="slide-body">
+
+    <div class="metric-row">
+      <div class="metric-box">
+        <div class="m-label">Best Algorithm</div>
+        <div class="m-value" style="font-size:17px; margin-top:4px;">Decision Tree</div>
+        <div class="m-sub">CART — depth 8</div>
+      </div>
+      <div class="metric-box">
+        <div class="m-label">Best Train-Test Split</div>
+        <div class="m-value">90:10</div>
+        <div class="m-sub">Stratified</div>
+      </div>
+      <div class="metric-box">
+        <div class="m-label">Best F1-Score</div>
+        <div class="m-value">0.6855</div>
+        <div class="m-sub">vs NB: 0.6080</div>
+      </div>
+      <div class="metric-box">
+        <div class="m-label">Best AUC</div>
+        <div class="m-value">0.6779</div>
+        <div class="m-sub">vs NB: 0.6346</div>
+      </div>
+    </div>
+
+    <div class="two-col" style="margin-top:14px;">
+      <div class="two-col-left">
+        <div class="col-heading">Why Decision Tree was Selected</div>
+        <ul class="bullet-list">
+          <li>Higher Accuracy (0.8149), Precision (0.5778), F1 (0.6855), and AUC (0.6779) than Naive Bayes at every split — consistent advantage, not a one-off result</li>
+          <li>Effectively captures non-linear interactions between correlated features such as marital-status and relationship</li>
+          <li>Recall of 0.8425 — still correctly identifies most genuine high-income individuals</li>
+          <li>Interpretable, rule-based structure — can be explained to non-technical stakeholders such as policy analysts</li>
+          <li>Naive Bayes "double-counts" correlated features, inflating recall but degrading precision</li>
+        </ul>
+
+        <div class="col-heading" style="margin-top:14px;">Confusion Matrix Summary (90:10)</div>
+        <table class="comp-table">
+          <thead><tr><th></th><th>Predicted ≤50K</th><th>Predicted &gt;50K</th></tr></thead>
+          <tbody>
+            <tr><td>True ≤50K</td><td class="winner">3,671</td><td>45</td></tr>
+            <tr><td>True &gt;50K</td><td>789</td><td>380</td></tr>
+          </tbody>
+        </table>
+        <p style="font-size:11px; color:#555; margin-top:5px;">Decision Tree — high precision on ≤50K class; low false-positive rate vs Naive Bayes (224 false positives)</p>
+      </div>
+
+      <div class="two-col-right">
+        <div class="col-heading">Top Feature Importances (Decision Tree)</div>
+        <ul class="bullet-list">
+          <li><strong>capital-gain</strong> — dominant splitter (~0.68 Gini importance); high investment income strongly signals &gt;50K</li>
+          <li><strong>capital-loss</strong> — secondary financial indicator (~0.30 Gini importance)</li>
+          <li><strong>marital-status (Married-civ-spouse)</strong> — highest MI score (0.108); most consistent predictor</li>
+          <li><strong>relationship (Husband/Wife)</strong> — MI score 0.116; household economic stability signal</li>
+          <li><strong>education-num</strong> — 0.33 correlation with income; strongest numerical predictor</li>
+        </ul>
+
+        <div class="col-heading" style="margin-top:14px;">Validation on 5 Unseen Inputs</div>
+        <table class="comp-table">
+          <thead><tr><th>Profile</th><th>Prediction</th><th>P(&gt;50K)</th></tr></thead>
+          <tbody>
+            <tr><td>M, 52, Exec-mgr, Married, high cap-gain</td><td class="best">&gt;50K</td><td>1.000</td></tr>
+            <tr><td>F, 24, Adm-clerical, Never-married, low hrs</td><td>&lt;=50K</td><td>0.024</td></tr>
+            <tr><td>M, 45, Prof-specialty, Married, edu-16</td><td class="best">&gt;50K</td><td>0.951</td></tr>
+            <tr><td>F, 33, Sales, Private, Married, moderate</td><td class="best">&gt;50K</td><td>0.598</td></tr>
+            <tr><td>M, 61, Exec-mgr, Self-emp, very high CG</td><td class="best">&gt;50K</td><td>1.000</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+  <span class="pg-num">5</span>
+</div>
+
+<!-- ═══════════════════════════════════ SLIDE 6 ═══════════════════════════════════ -->
+<div class="slide-label">Slide 6 of 6</div>
+<div class="slide">
+  <div class="slide-header">
+    <h2>Conclusion, Recommendation &amp; Limitation</h2>
+  </div>
+  <div class="slide-body">
+
+    <div class="two-col">
+      <div class="two-col-left">
+        <div class="col-heading">Summary of Main Findings</div>
+        <ul class="bullet-list">
+          <li>Decision Tree outperformed Naive Bayes on Accuracy, Precision, F1, and AUC across all five splits</li>
+          <li>Naive Bayes maintained higher Recall — a structural result of violating the independence assumption with correlated features (relationship, marital-status, sex)</li>
+          <li>Most significant predictors: <strong>marital-status (Married-civ-spouse), relationship, capital-gain, education-num, age</strong></li>
+          <li>Target class imbalance (76:24) managed via class_weight="balanced" — resampling not required</li>
+        </ul>
+
+        <div class="col-heading" style="margin-top:14px;">Meaning of the Result</div>
+        <ul class="bullet-list">
+          <li>Income is strongly tied to marital and occupational status — confirming known socioeconomic patterns</li>
+          <li>Education level (0.33 correlation) is the single strongest numerical predictor</li>
+          <li>Investment returns (capital-gain) are concentrated among a small high-earning subset</li>
+        </ul>
+
+        <div class="col-heading" style="margin-top:14px;">Practical Recommendation</div>
+        <ul class="bullet-list">
+          <li><strong>Governments:</strong> Target interventions (education access, job training) at identified low-income demographic segments</li>
+          <li><strong>Financial institutions:</strong> Use Decision Tree's transparent logic for credit risk assessment — explainable to clients</li>
+          <li><strong>Fairness check required</strong> before deployment — sex and race showed disparate representation in &gt;50K class</li>
+        </ul>
+      </div>
+
+      <div class="two-col-right">
+        <div class="col-heading">Strength of the Analysis</div>
+        <ul class="bullet-list">
+          <li>Comprehensive preprocessing pipeline with every step justified from EDA findings</li>
+          <li>Systematic evaluation across 5 train-test splits — more reliable than single-split evaluation</li>
+          <li>Stratified sampling at every split preserves realistic class proportions</li>
+          <li>Mutual Information feature selection avoids linear-only assumptions of correlation</li>
+          <li>Decision Tree provides interpretable, auditable predictions</li>
+        </ul>
+
+        <div class="col-heading" style="margin-top:14px;">Limitation of the Analysis</div>
+        <ul class="bullet-list">
+          <li>Dataset from <strong>1994</strong> — income patterns have changed considerably; findings may not generalise to today</li>
+          <li>Class imbalance remains a structural challenge; SMOTE or other resampling not applied</li>
+          <li>A single Decision Tree is sensitive to training data changes; ensemble methods would be more stable</li>
+          <li>Naive Bayes independence assumption violated by correlated categorical features</li>
+        </ul>
+
+        <div class="col-heading" style="margin-top:14px;">Future Improvement</div>
+        <ul class="bullet-list">
+          <li>Apply ensemble methods — <strong>Random Forest or Gradient Boosting</strong> — for improved accuracy and stability</li>
+          <li>Implement SMOTE resampling to address class imbalance more directly</li>
+          <li>Evaluate on more recent census data to test contemporary validity</li>
+          <li>Engineer polynomial interaction terms (e.g., age × education) for richer feature space</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+  <span class="pg-num">6</span>
+</div>
+
+</body>
+</html>
