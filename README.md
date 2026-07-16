@@ -3,9 +3,11 @@
 [![Python](https://img.shields.io/badge/python-3.10%2B-blue)](https://www.python.org)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.104.1-009688)](https://fastapi.tiangolo.com)
 [![Scikit-learn](https://img.shields.io/badge/scikit--learn-1.3.2-F7931E)](https://scikit-learn.org)
-[![License](https://img.shields.io/badge/license-MIT-green)](#license)
+[![License](https://img.shields.io/github/license/yourusername/adult-income-classifier)](LICENSE)
 [![Status](https://img.shields.io/badge/status-active-brightgreen)](#status)
 [![Dataset](https://img.shields.io/badge/dataset-UCI%20Adult-blueviolet)](https://archive.ics.uci.edu/ml/datasets/adult)
+[![GitHub stars](https://img.shields.io/github/stars/yourusername/adult-income-classifier?style=social)](https://github.com/yourusername/adult-income-classifier/stargazers)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/yourusername/adult-income-classifier/ci.yml?branch=main)](https://github.com/yourusername/adult-income-classifier/actions)
 
 A stateless **FastAPI backend** + **static HTML/JS frontend** for predicting whether an individual's annual income exceeds $50,000 based on the UCI Adult Income dataset. Trained using a Decision Tree classifier with adaptive feature engineering and preprocessing. No database, no server-side storage — every prediction request is processed independently and returned in milliseconds.
 
