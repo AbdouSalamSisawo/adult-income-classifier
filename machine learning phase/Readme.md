@@ -139,19 +139,6 @@ The project follows the standard data mining and machine learning lifecycle:
 Two classification algorithms will be developed and evaluated using five train-test split ratios (50:50, 60:40, 70:30, 80:20, and 90:10). The best-performing model will be selected based on Accuracy, Precision, Recall, and F1-Score.
 
 
-# Why MinMaxScaler is chosen
-print("MinMaxScaler chosen because:")
-print("  - Decision Tree does not require normalisation, but Naïve Bayes benefits")
-print("    from bounded input ranges for its Gaussian likelihood estimation.")
-print("  - capital-gain and capital-loss have extreme right skew; MinMax [0,1]")
-print("    suppresses the influence of extreme winsorised values without distortion.")
-print("  - Unlike StandardScaler, MinMax does not assume normality.")
-print()
-print("IMPORTANT: the preprocessor is fitted ONLY on the training split inside")
-print("each experiment loop — preventing any data leakage from the test partition.")
-
-
-
 # 7. Findings, Recommendations, Strengths & Limitations
 print("""
 FINDINGS
