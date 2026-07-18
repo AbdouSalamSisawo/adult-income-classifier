@@ -140,7 +140,6 @@ Two classification algorithms will be developed and evaluated using five train-t
 
 
 # 7. Findings, Recommendations, Strengths & Limitations
-print("""
 FINDINGS
 ========
 1. The Decision Tree classifier outperforms Naïve Bayes on every metric across all
