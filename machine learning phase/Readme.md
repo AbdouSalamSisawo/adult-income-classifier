@@ -139,24 +139,6 @@ The project follows the standard data mining and machine learning lifecycle:
 Two classification algorithms will be developed and evaluated using five train-test split ratios (50:50, 60:40, 70:30, 80:20, and 90:10). The best-performing model will be selected based on Accuracy, Precision, Recall, and F1-Score.
 
 
-
-# Algo comparision
-print("Algorithm 1: Decision Tree Classifier")
-print("  - Naturally handles both numerical and binary/OHE features.")
-print("  - Produces interpretable if-else rules — directly aligned with the")
-print("    demographic classification task.")
-print("  - No distributional assumptions about the input features.")
-print("  - max_depth=8 balances bias-variance; class_weight='balanced' corrects")
-print("    for the 76:24 class imbalance without resampling.")
-print()
-print("Algorithm 2: Gaussian Naïve Bayes")
-print("  - Provides a probabilistic baseline grounded in a fundamentally")
-print("    different assumption (conditional independence) from Decision Tree.")
-print("  - Extremely fast to train — useful for comparing gain vs compute cost.")
-print("  - var_smoothing controls numerical stability for near-zero variance")
-print("    features (many OHE columns are near-binary).")
-
-
 # Why MinMaxScaler is chosen
 print("MinMaxScaler chosen because:")
 print("  - Decision Tree does not require normalisation, but Naïve Bayes benefits")
