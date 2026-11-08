@@ -284,30 +284,52 @@
   // Point this at your deployed backend before shipping.
   const BACKEND_URL = window.BACKEND_URL || "http://localhost:8000";
 
-  const OPTIONS = {
-    workclass: ["Private","Self-emp-not-inc","Self-emp-inc","Federal-gov","Local-gov","State-gov","Without-pay","Never-worked"],
-    education: ["Preschool","1st-4th","5th-6th","7th-8th","9th","10th","11th","12th","HS-grad","Some-college","Assoc-voc","Assoc-acdm","Bachelors","Masters","Prof-school","Doctorate"],
-    maritalStatus: ["Married-civ-spouse","Never-married","Divorced","Separated","Widowed","Married-spouse-absent","Married-AF-spouse"],
-    occupation: ["Exec-managerial","Prof-specialty","Craft-repair","Adm-clerical","Sales","Other-service","Machine-op-inspct","Transport-moving","Handlers-cleaners","Farming-fishing","Tech-support","Protective-serv","Priv-house-serv","Armed-Forces"],
-    relationship: ["Husband","Wife","Not-in-family","Own-child","Unmarried","Other-relative"],
-  };
-
-  function fillSelect(id, values, defaultValue){
-    const el = document.getElementById(id);
-    el.innerHTML = values.map(v => `<option value="${v}"${v===defaultValue?' selected':''}>${v}</option>`).join('');
-  }
-  fillSelect('workclass', OPTIONS.workclass);
-  fillSelect('education', OPTIONS.education, 'Bachelors');
-  fillSelect('maritalStatus', OPTIONS.maritalStatus);
-  fillSelect('occupation', OPTIONS.occupation);
-  fillSelect('relationship', OPTIONS.relationship);
-
   document.getElementById('refNum').textContent = Math.floor(100000 + Math.random()*899999);
 
   const form = document.getElementById('predictForm');
   const submitBtn = document.getElementById('submitBtn');
   const formError = document.getElementById('formError');
   const resultBlock = document.getElementById('resultBlock');
+
+  function fillSelect(id, values, defaultValue){
+    const el = document.getElementById(id);
+    el.replaceChildren(...values.map(v => {
+      const opt = document.createElement('option');
+      opt.value = opt.textContent = v;
+      opt.selected = v === defaultValue;
+      return opt;
+    }));
+  }
+
+  // Form options come from the backend (/schema), which reads them from the
+  // trained model, so the UI can never drift out of sync with the model.
+  async function loadSchema(){
+    submitBtn.disabled = true;
+    try {
+      const res = await fetch(`${BACKEND_URL}/schema`);
+      if (!res.ok) throw new Error(`Backend returned ${res.status}`);
+      const s = await res.json();
+      fillSelect('workclass', s.workclass);
+      fillSelect('education', s.education, 'Bachelors');
+      fillSelect('maritalStatus', s.marital_status);
+      fillSelect('occupation', s.occupation);
+      fillSelect('relationship', s.relationship);
+      fillSelect('sex', s.sex);
+      formError.textContent = '';
+      submitBtn.disabled = false;
+    } catch (err) {
+      formError.textContent = `Cannot reach the backend at ${BACKEND_URL} (${err.message}). Start it, then reload this page.`;
+    }
+  }
+  loadSchema();
+
+  // FastAPI returns `detail` as a string (4xx/5xx) or as a list of field errors (422).
+  function describeError(detail, status){
+    if (Array.isArray(detail)) {
+      return detail.map(d => `${(d.loc || []).filter(p => p !== 'body').join('.')}: ${d.msg}`).join('; ');
+    }
+    return detail || `Backend returned ${status}`;
+  }
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -336,7 +358,7 @@
       });
       if (!res.ok) {
         const errBody = await res.json().catch(() => ({}));
-        throw new Error(errBody.detail || `Backend returned ${res.status}`);
+        throw new Error(describeError(errBody.detail, res.status));
       }
       const data = await res.json();
 
@@ -356,7 +378,9 @@
 
       resultBlock.classList.add('visible');
     } catch (err) {
-      formError.textContent = `Could not complete assessment: ${err.message}. Is the backend running at ${BACKEND_URL}?`;
+      formError.textContent = err instanceof TypeError
+        ? `Could not reach the backend at ${BACKEND_URL}. Is it running?`
+        : `Could not complete assessment: ${err.message}`;
     } finally {
       submitBtn.disabled = false;
       submitBtn.textContent = 'Assess Case';
