@@ -280,9 +280,10 @@
     </footer>
   </div>
 
+<script src="config.js"></script>
 <script>
-  // Point this at your deployed backend before shipping.
-  const BACKEND_URL = window.BACKEND_URL || "http://localhost:8000";
+  // Set in config.js: local backend in development, deployed backend in production.
+  const BACKEND_URL = (window.BACKEND_URL || "http://localhost:8000").replace(/\/+$/, "");
 
   document.getElementById('refNum').textContent = Math.floor(100000 + Math.random()*899999);
 

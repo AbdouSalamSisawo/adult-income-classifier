@@ -55,11 +55,13 @@ adult-income-classifier/
 │   ├── adult_income_model.pkl        # Trained artifact (preprocessor + Decision Tree + metadata)
 │   ├── requirements.txt              # Runtime dependencies
 │   ├── requirements-dev.txt          # + test dependencies
+│   ├── .python-version               # Pins Python 3.12 (used by Vercel)
 │   ├── pytest.ini
 │   └── tests/test_api.py             # API tests
 │
 ├── frontend/
-│   └── index.html                    # Single-page UI (form + results)
+│   ├── index.html                    # Single-page UI (form + results)
+│   └── config.js                     # Backend URL (localhost in dev, your deployed API in prod)
 │
 ├── machine learning phase/           # ML research and development
 │   ├── ML_model_notebook.ipynb       # Full pipeline; its last cell writes ../backend/adult_income_model.pkl
@@ -228,11 +230,29 @@ scikit-learn version, update `backend/requirements.txt` to match.
 
 ## Deployment
 
-- **Backend**: any Python host (Render, Railway, Fly.io, a VPS, …). Ship
-  `adult_income_model.pkl` alongside `main.py` and use Python 3.11/3.12.
-- **Frontend**: any static host (Vercel, Netlify, GitHub Pages). Point it at your
-  backend by setting `window.BACKEND_URL` before the main script, or by editing the
-  `BACKEND_URL` constant in `frontend/index.html`.
+### Vercel (two projects from the same repo)
+
+**1. Backend**
+- Import the repo in Vercel → set **Root Directory** to `backend`.
+- No `vercel.json` needed: Vercel detects FastAPI from `main.py` + `requirements.txt`,
+  and `backend/.python-version` pins Python 3.12.
+- Deploy, then check `https://<backend>.vercel.app/health` returns `{"status":"healthy"}`.
+
+**2. Frontend**
+- Edit `frontend/config.js` and set `DEPLOYED_BACKEND_URL` to the backend URL (no trailing slash). Commit and push.
+- Import the repo again as a second project → **Root Directory** `frontend`,
+  Framework Preset **Other**, no build command.
+
+`config.js` automatically uses `http://localhost:8000` when the page is opened on
+localhost, so local development needs no changes.
+
+> The first request after a period of inactivity can take a few seconds (cold start
+> while pandas/scikit-learn load); subsequent requests are fast.
+
+### Other hosts
+- **Backend**: any Python 3.11/3.12 host (Render, Railway, Fly.io, a VPS, …). Ship
+  `adult_income_model.pkl` alongside `main.py`.
+- **Frontend**: any static host (Netlify, GitHub Pages, …). Set the backend URL in `frontend/config.js`.
 
 ## Troubleshooting
 
