@@ -4,13 +4,13 @@
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.104.1-009688)](https://fastapi.tiangolo.com)
 [![Scikit-learn](https://img.shields.io/badge/scikit--learn-1.8.0-F7931E)](https://scikit-learn.org)
 [![License](https://img.shields.io/github/license/AbdouSalamSisawo/adult-income-classifier)](LICENSE)
-[![Live Demo](https://img.shields.io/badge/demo-live-brightgreen)](https://adult-income-classifier-web.vercel.app)
+[![Live App](https://img.shields.io/badge/app-live-brightgreen)](https://adult-income-classifier-web.vercel.app)
 [![Dataset](https://img.shields.io/badge/dataset-UCI%20Adult-blueviolet)](https://archive.ics.uci.edu/dataset/2/adult)
 [![GitHub stars](https://img.shields.io/github/stars/AbdouSalamSisawo/adult-income-classifier?style=social)](https://github.com/AbdouSalamSisawo/adult-income-classifier/stargazers)
 
 A stateless **FastAPI backend** + **static HTML/JS frontend** for predicting whether an individual's annual income exceeds $50,000 based on the UCI Adult Income dataset. Trained using a Decision Tree classifier with feature engineering and preprocessing. No database, no server-side storage — every prediction request is processed independently and returned in milliseconds.
 
-**🌐 Live demo:** https://adult-income-classifier-web.vercel.app
+**🌐 Live app:** https://adult-income-classifier-web.vercel.app
 **⚙️ API:** https://adult-income-classifier-fgki.vercel.app ([interactive docs](https://adult-income-classifier-fgki.vercel.app/docs))
 
 ![Adult Income Classifier Interface](image.png)
@@ -40,12 +40,12 @@ This project demonstrates a complete machine learning pipeline from data explora
 - **UCI Adult Income Dataset** — 48,842 records (32,561 train + 16,281 test), 14 attributes
 
 ## Features
-✅ **Instant Predictions** — sub-100ms response times
-✅ **Fully offline** — no external APIs
-✅ **Interactive Web UI** — case-file style interface
-✅ **REST API** — OpenAPI/Swagger documentation at `/docs`
-✅ **Faithful preprocessing** — caps, encodings and column order are read from the trained model artifact
-✅ **CORS Enabled** — frontend can be hosted separately
+✅ **Instant Predictions** — sub-100ms response times\
+✅ **Fully offline** — no external APIs\
+✅ **Interactive Web UI** — case-file style interface\
+✅ **REST API** — OpenAPI/Swagger documentation at `/docs`\
+✅ **Faithful preprocessing** — caps, encodings and column order are read from the trained model artifact\
+✅ **CORS Enabled** — frontend can be hosted separately\
 ✅ **Validated & tested** — Pydantic input validation, logged server errors, pytest suite
 
 ## Project Structure
@@ -214,7 +214,7 @@ Full methodology and results: [ML phase README](machine%20learning%20phase/Readm
 - **Dated data:** the dataset comes from the 1994 US Census; income thresholds and
   occupational patterns have changed since.
 - **Sensitive attributes:** `sex` is a model input. Predictions reflect historical
-  patterns in the data, so this is an educational demo, not a tool for real decisions about people.
+  patterns in the data, so this is an educational project, not a tool for real decisions about people.
 
 ## How the model input is reconstructed
 
