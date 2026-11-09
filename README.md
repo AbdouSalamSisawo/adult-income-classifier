@@ -4,11 +4,14 @@
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.104.1-009688)](https://fastapi.tiangolo.com)
 [![Scikit-learn](https://img.shields.io/badge/scikit--learn-1.8.0-F7931E)](https://scikit-learn.org)
 [![License](https://img.shields.io/github/license/AbdouSalamSisawo/adult-income-classifier)](LICENSE)
-[![Status](https://img.shields.io/badge/status-active-brightgreen)](#status)
-[![Dataset](https://img.shields.io/badge/dataset-UCI%20Adult-blueviolet)](https://archive.ics.uci.edu/ml/datasets/adult)
+[![Live Demo](https://img.shields.io/badge/demo-live-brightgreen)](https://adult-income-classifier-web.vercel.app)
+[![Dataset](https://img.shields.io/badge/dataset-UCI%20Adult-blueviolet)](https://archive.ics.uci.edu/dataset/2/adult)
 [![GitHub stars](https://img.shields.io/github/stars/AbdouSalamSisawo/adult-income-classifier?style=social)](https://github.com/AbdouSalamSisawo/adult-income-classifier/stargazers)
 
 A stateless **FastAPI backend** + **static HTML/JS frontend** for predicting whether an individual's annual income exceeds $50,000 based on the UCI Adult Income dataset. Trained using a Decision Tree classifier with feature engineering and preprocessing. No database, no server-side storage — every prediction request is processed independently and returned in milliseconds.
+
+**🌐 Live demo:** https://adult-income-classifier-web.vercel.app
+**⚙️ API:** https://adult-income-classifier-fgki.vercel.app ([interactive docs](https://adult-income-classifier-fgki.vercel.app/docs))
 
 ![Adult Income Classifier Interface](image.png)
 
@@ -61,7 +64,8 @@ adult-income-classifier/
 │
 ├── frontend/
 │   ├── index.html                    # Single-page UI (form + results)
-│   └── config.js                     # Backend URL (localhost in dev, your deployed API in prod)
+│   ├── config.js                     # Backend URL (localhost in dev, your deployed API in prod)
+│   └── favicon.svg                   # Tab icon (navy globe)
 │
 ├── machine learning phase/           # ML research and development
 │   ├── ML_model_notebook.ipynb       # Full pipeline; its last cell writes ../backend/adult_income_model.pkl
@@ -71,6 +75,7 @@ adult-income-classifier/
 │
 ├── image.png                         # Screenshot of the interface
 ├── test_request.json                 # Sample API request
+├── LICENSE
 └── README.md
 ```
 
@@ -199,6 +204,19 @@ python -m pytest
 
 Model artifact size: ~30 KB.
 
+Full methodology and results: [ML phase README](machine%20learning%20phase/Readme.md) ·
+[Project Report](machine%20learning%20phase/Documents/Project%20Report.pdf).
+
+### Known Limitations
+- **Mild data leakage:** the winsorisation caps and duplicate removal are computed on the
+  combined train + test data before splitting, so reported metrics may be slightly optimistic.
+- **Precision trade-off:** `class_weight='balanced'` favours recall for the >50K class
+  (0.84) at the cost of precision (0.58), so the model often predicts >50K for borderline profiles.
+- **Dated data:** the dataset comes from the 1994 US Census; income thresholds and
+  occupational patterns have changed since.
+- **Sensitive attributes:** `sex` is a model input. Predictions reflect historical
+  patterns in the data, so this is an educational demo, not a tool for real decisions about people.
+
 ## How the model input is reconstructed
 
 `adult_income_model.pkl` is a dict written by the notebook's final cell:
@@ -232,6 +250,17 @@ scikit-learn version, update `backend/requirements.txt` to match.
 
 ### Vercel (two projects from the same repo)
 
+Current deployment:
+
+| Vercel project | Root Directory | URL |
+|---|---|---|
+| `adult-income-classifier-fgki` | `backend` | https://adult-income-classifier-fgki.vercel.app |
+| `adult-income-classifier-web` | `frontend` | https://adult-income-classifier-web.vercel.app |
+
+Both are connected to GitHub, so every push to `main` redeploys them.
+
+To set it up from scratch:
+
 **1. Backend**
 - Import the repo in Vercel → set **Root Directory** to `backend`.
 - No `vercel.json` needed: Vercel detects FastAPI from `main.py` + `requirements.txt`,
@@ -263,10 +292,21 @@ localhost, so local development needs no changes.
 | Frontend says "Cannot reach the backend" | Start the backend on port 8000, then reload the page. |
 | Port already in use | Windows: `netstat -ano \| findstr :8000`; or pick another port. |
 | `numpy.dtype size changed` errors | NumPy was upgraded underneath pandas, typically in a shared global environment. Use a venv. |
+| Vercel frontend shows `404 NOT_FOUND` | The project's **Root Directory** isn't `frontend` (Settings → Build and Deployment), so Vercel publishes the repo root. Fix it and redeploy. |
+| Live site is slow on the first prediction | Cold start while the backend loads pandas/scikit-learn. Later requests are fast. |
+| Old tab icon still showing | Browsers cache favicons. Hard-refresh with Ctrl+F5. |
+
+## Authors
+
+Group project for **CCS23213 Data Mining**, supervised by Dr. Mohamad Farhan Mohamad Mohsin:
+
+- Abdou Salam Sisawo
+- Anas Muhammad Sani Lawal
+- Zikrullah Faizan
 
 ## Credits & Attribution
 
-- **Dataset**: UCI Machine Learning Repository — Adult Income Dataset
+- **Dataset**: [UCI Machine Learning Repository — Adult Income Dataset](https://archive.ics.uci.edu/dataset/2/adult) (Becker & Kohavi, 1996)
 - **Framework**: FastAPI and vanilla JavaScript
 - **Training**: scikit-learn Decision Tree classifier
 - **Design inspiration**: retro government form aesthetic
