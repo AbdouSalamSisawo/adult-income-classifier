@@ -4,7 +4,6 @@
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.104.1-009688)](https://fastapi.tiangolo.com)
 [![Scikit-learn](https://img.shields.io/badge/scikit--learn-1.8.0-F7931E)](https://scikit-learn.org)
 [![License](https://img.shields.io/github/license/AbdouSalamSisawo/adult-income-classifier)](LICENSE)
-[![Live App](https://img.shields.io/badge/app-live-brightgreen)](https://adult-income-classifier-web.vercel.app)
 [![Vercel Deployment](https://img.shields.io/badge/Vercel-backend--live-black?logo=vercel)](https://adult-income-classifier-fgki.vercel.app)
 [![Dataset](https://img.shields.io/badge/dataset-UCI%20Adult-blueviolet)](https://archive.ics.uci.edu/dataset/2/adult)
 [![GitHub stars](https://img.shields.io/github/stars/AbdouSalamSisawo/adult-income-classifier?style=social)](https://github.com/AbdouSalamSisawo/adult-income-classifier/stargazers)
