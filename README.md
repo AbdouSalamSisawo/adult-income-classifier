@@ -40,7 +40,6 @@ This project demonstrates a complete machine learning pipeline from data explora
 - **UCI Adult Income Dataset** — 48,842 records (32,561 train + 16,281 test), 14 attributes
 
 ## Features
-
 ✅ **Instant Predictions** — sub-100ms response times
 ✅ **Fully offline** — no external APIs
 ✅ **Interactive Web UI** — case-file style interface
